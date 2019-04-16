@@ -2,7 +2,6 @@
 from flask import Flask,jsonify, request, session, redirect, send_from_directory, render_template, make_response
 from flask_restful import reqparse, abort, Api, Resource
 from flask.logging import default_handler
-from flask_cors import *
 from conf import db_connect
 from DB import DB
 from models import *
@@ -64,7 +63,6 @@ class get_list(Resource):
         JsonInfo['page_sum'] = page_sum
         JsonInfo['page_num'] = int(page)
         rst = make_response(json.dumps(JsonInfo))
-        rst.headers['Access-Control-Allow-Origin'] = '*'
         return rst
 
 
@@ -74,7 +72,6 @@ def element():
 
 
 api = Api(app)
-CORS(app, supports_credentials=True)
 # apis
 api.add_resource(get_list, '/page/<type>/<page>')
 if __name__ == '__main__':
