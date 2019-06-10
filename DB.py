@@ -10,6 +10,7 @@ import datetime
 import re
 import os
 import json
+import time
 from  sqlalchemy.sql.expression import func, select
 
 
@@ -57,16 +58,26 @@ class DB:
             print (e)
             return [{"status": "GetList error"}]
 
-    def SaveArticle (self,title,description,author,src,date,type,thumbnail):
+    def SaveArticle (self,title,description,author,src,type,thumbnail):
         try:
             article_model = ArticleModel()
-            obj = Users(title=title,description=description,author=author,src=src,date=date,type=type,thumbnail=thumbnail)
+            article_obj = {}
+            article_obj['title'] = title
+            article_obj['description'] = description
+            article_obj['author'] = author
+            article_obj['src'] = src
+            article_obj['date'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            article_obj['read_number'] = 0
+            article_obj['type'] = type
+            article_obj['thumbnail'] = thumbnail
             article_model.add(obj)
             if article_model.commit():
-                return [{"status": "SaveArticle success"}]
+                article_info = article_model.query.filter_by(src=src).first()
+                article_info['status'] = "SaveArticle success"
+                return article_info
             else:
                 return [{"status": "SaveArticle error"}]
         except Exception, e:
             db.session.rollback()
             print (e)
-            return [{"status": "GetList error"}]
+            return [{"status": "SaveArticle error"}]
