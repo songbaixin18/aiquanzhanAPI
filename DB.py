@@ -56,3 +56,17 @@ class DB:
             db.session.rollback()
             print (e)
             return [{"status": "GetList error"}]
+
+    def SaveArticle (self,title,description,author,src,date,type,thumbnail):
+        try:
+            article_model = ArticleModel()
+            obj = Users(title=title,description=description,author=author,src=src,date=date,type=type,thumbnail=thumbnail)
+            article_model.add(obj)
+            if article_model.commit():
+                return [{"status": "SaveArticle success"}]
+            else:
+                return [{"status": "SaveArticle error"}]
+        except Exception, e:
+            db.session.rollback()
+            print (e)
+            return [{"status": "GetList error"}]
