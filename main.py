@@ -86,7 +86,7 @@ class save_article(Resource):
     def post(self):
         args = parser.parse_args()
         src = random_str(6)
-        saved = DB.SaveArticle(str(args['title']),str(args['description']),str(args['author']),src[1:],str(args['type']),str(args['thumbnail'])) > 0
+        saved = DB.SaveArticle(str(args['title']),str(args['description']),str(args['author']),src[1:],str(args['type']),str(args['thumbnail']))
         if saved['status'] == "SaveArticle success":
             if str(saved['type']) == "1" :
                 src = "./blog/" + src + ".html"

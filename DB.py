@@ -60,23 +60,15 @@ class DB:
 
     def SaveArticle (self,title,description,author,src,type,thumbnail):
         try:
+            session = DBSession()
+            new_user = ArticleModel(title=title, description=description,author=author,src=src,date=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),read_number=0,type=type,thumbnail=thumbnail)
+            session.add(new_user)
+            session.commit()
+            session.close()
             article_model = ArticleModel()
-            article_obj = {}
-            article_obj['title'] = title
-            article_obj['description'] = description
-            article_obj['author'] = author
-            article_obj['src'] = src
-            article_obj['date'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-            article_obj['read_number'] = 0
-            article_obj['type'] = type
-            article_obj['thumbnail'] = thumbnail
-            article_model.add(obj)
-            if article_model.commit():
-                article_info = article_model.query.filter_by(src=src).first()
-                article_info['status'] = "SaveArticle success"
-                return article_info
-            else:
-                return [{"status": "SaveArticle error"}]
+            article_info = article_model.query.filter_by(src=src).first()
+            article_info['status'] = "SaveArticle success"
+            return article_info
         except Exception, e:
             db.session.rollback()
             print (e)
