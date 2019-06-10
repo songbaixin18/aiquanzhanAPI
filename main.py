@@ -76,38 +76,38 @@ class get_list(Resource):
 
 class save_article(Resource):
 
-    def write_article_html(self,title,description,author,content,date,type,thumbnail):
+    def post(self):
+        args = parser.parse_args()
         src = random_str(6)
-        switch (str(type)){
-            case "1":
-                src = "./blog/" + src + ".html"
-                with open(src,'tw') as f:
-                    f.write(str(render_template('blog_template.html',
-                                                title = str(title),
-                                                author = str(author),
-                                                content = str(content),
-                                                date = str(date)
-                                                )
-                                )
+        if(str(args['type']) = "1"){
+            src = "./blog/" + src + ".html"
+            with open(src,'tw') as f:
+                f.write(str(render_template('blog_template.html',
+                                                title = str(args['title']),
+                                                author = str(args['author']),
+                                                content = str(args['content']),
+                                                date = str(args['date'])
+                                            )
                             )
-                break;
-            case "2":
-                src = "./file/" + src + ".html"
-                with open(src,'tw') as f:
-                    f.write(str(render_template('file_template.html',
-                                                title = str(title),
-                                                author = str(author),
-                                                content = str(content),
-                                                date = str(date)
-                                                )
-                                )
-                            )
-                break;
+                        )
         }
-        if(self.save_article_info(title,description,author,src,date,type,thumbnail)){
+        if(str(args['type']) = "2"){
+            src = "./file/" + src + ".html"
+            with open(src,'tw') as f:
+                f.write(str(render_template('file_template.html',
+                                                title = str(args['title']),
+                                                author = str(args['author']),
+                                                content = str(args['content']),
+                                                date = str(args['date'])
+                                                )
+                            )
+                        )
+        }
+        saved = DB.SaveArticle(str(args['title']),str(args['description']),str(args['author']),src[1:]),str(args['date']),str(args['type']),str(args['thumbnail'])) > 0
+        if(saved){
             JsonInfo = {}
-            JsonInfo['title'] = title
-            JsonInfo['type'] = type
+            JsonInfo['title'] = ['title']
+            JsonInfo['type'] = ['type']
             JsonInfo['src'] = src[1:]
             JsonInfo['statu'] = "success"
             return make_response(json.dumps(JsonInfo));
@@ -119,9 +119,7 @@ class save_article(Resource):
             return make_response(json.dumps(JsonInfo));
         }
 
-    def save_article_info(self,title,description,author,src,date,type,thumbnail):
-        # saved = DB.SaveArticle(str(title),str(description),str(author),str(src),str(date),str(type),str(thumbnail)) > 0
-        return DB.SaveArticle(str(title),str(description),str(author),str(src),str(date),str(type),str(thumbnail)) > 0
+
 @app.route('/share', methods=['GET', 'POST'])
 def element():
     return render_template('share.html')
