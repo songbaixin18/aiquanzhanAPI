@@ -53,7 +53,14 @@ def random_str(num):
 
 
 DB = DB()
-
+parser = reqparse.RequestParser()
+parser.add_argument('title', location=['json', 'args'])
+parser.add_argument('description', location=['json', 'args'])
+parser.add_argument('author', location=['json', 'args'])
+parser.add_argument('date', location=['json', 'args'])
+parser.add_argument('type', location=['json', 'args'])
+parser.add_argument('thumbnail', location=['json', 'args'])
+parser.add_argument('content', location=['json', 'args'])
 
 class get_list(Resource):
 
