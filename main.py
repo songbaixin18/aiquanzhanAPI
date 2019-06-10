@@ -13,6 +13,8 @@ import re
 import os
 import json
 import logging
+import uuid
+import random
 from  sqlalchemy.sql.expression import func, select
 
 defaultencoding = 'utf-8'
@@ -41,6 +43,14 @@ def http_post_json(url,values):
     response = urllib2.urlopen(req)
     return response.read()
 
+ 
+def random_str(num):
+    uln = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    rs = random.sample(uln,num)  # 生成一个指定位数的随机字符串
+    a = uuid.uuid1()  # 根据时间戳生成uuid,保证全球唯一
+    b = ''.join(rs+str(a).split("-"))
+    return b
+
 
 DB = DB()
 
@@ -49,7 +59,6 @@ class get_list(Resource):
 
     def get_page_sum(self,type):
         page_num = DB.GetListCount(str(type))
-        app.logger.debug(page_num)
         if int(page_num) % 6 == 0:
             return int(page_num)/6
         else:
@@ -65,7 +74,54 @@ class get_list(Resource):
         rst = make_response(json.dumps(JsonInfo))
         return rst
 
+class save_article(Resource):
 
+    def write_article_html(self,title,description,author,content,date,type,thumbnail):
+        src = random_str(6)
+        switch (str(type)){
+            case "1":
+                src = "./blog/" + src + ".html"
+                with open(src,'tw') as f:
+                    f.write(str(render_template('blog_template.html',
+                                                title = str(title),
+                                                author = str(author),
+                                                content = str(content),
+                                                date = str(date)
+                                                )
+                                )
+                            )
+                break;
+            case "2":
+                src = "./file/" + src + ".html"
+                with open(src,'tw') as f:
+                    f.write(str(render_template('file_template.html',
+                                                title = str(title),
+                                                author = str(author),
+                                                content = str(content),
+                                                date = str(date)
+                                                )
+                                )
+                            )
+                break;
+        }
+        if(self.save_article_info(title,description,author,src,date,type,thumbnail)){
+            JsonInfo = {}
+            JsonInfo['title'] = title
+            JsonInfo['type'] = type
+            JsonInfo['src'] = src[1:]
+            JsonInfo['statu'] = "success"
+            return make_response(json.dumps(JsonInfo));
+        }else{
+            if(os.path.exists(src)):
+            　　os.remove(src)
+            JsonInfo = {}
+            JsonInfo['statu'] = "fail"
+            return make_response(json.dumps(JsonInfo));
+        }
+
+    def save_article_info(self,title,description,author,src,date,type,thumbnail):
+        # saved = DB.SaveArticle(str(title),str(description),str(author),str(src),str(date),str(type),str(thumbnail)) > 0
+        return DB.SaveArticle(str(title),str(description),str(author),str(src),str(date),str(type),str(thumbnail)) > 0
 @app.route('/share', methods=['GET', 'POST'])
 def element():
     return render_template('share.html')
@@ -74,6 +130,7 @@ def element():
 api = Api(app)
 # apis
 api.add_resource(get_list, '/page/<type>/<page>')
+api.add_resource(save_article, '/save_article')
 if __name__ == '__main__':
     app.debug = True
     app.config['SQLALCHEMY_BINDS'] = {'app': app_url}
