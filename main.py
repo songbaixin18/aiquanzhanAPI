@@ -79,45 +79,28 @@ class save_article(Resource):
     def post(self):
         args = parser.parse_args()
         src = random_str(6)
-        if(str(args['type']) = "1"){
+        if str(args['type']) == "1" :
             src = "./blog/" + src + ".html"
             with open(src,'tw') as f:
-                f.write(str(render_template('blog_template.html',
-                                                title = str(args['title']),
-                                                author = str(args['author']),
-                                                content = str(args['content']),
-                                                date = str(args['date'])
-                                            )
-                            )
-                        )
-        }
-        if(str(args['type']) = "2"){
+                f.write(str(render_template('blog_template.html',title = str(args['title']),author = str(args['author']),content = str(args['content']),date = str(args['date']))))
+        elif str(args['type']) == "2" :
             src = "./file/" + src + ".html"
             with open(src,'tw') as f:
-                f.write(str(render_template('file_template.html',
-                                                title = str(args['title']),
-                                                author = str(args['author']),
-                                                content = str(args['content']),
-                                                date = str(args['date'])
-                                                )
-                            )
-                        )
-        }
-        saved = DB.SaveArticle(str(args['title']),str(args['description']),str(args['author']),src[1:]),str(args['date']),str(args['type']),str(args['thumbnail'])) > 0
-        if(saved){
+                f.write(str(render_template('file_template.html',title = str(args['title']),author = str(args['author']),content = str(args['content']),date = str(args['date']))))
+        saved = DB.SaveArticle(str(args['title']),str(args['description']),str(args['author']),src[1:],str(args['date']),str(args['type']),str(args['thumbnail'])) > 0
+        if saved:
             JsonInfo = {}
             JsonInfo['title'] = ['title']
             JsonInfo['type'] = ['type']
             JsonInfo['src'] = src[1:]
             JsonInfo['statu'] = "success"
-            return make_response(json.dumps(JsonInfo));
-        }else{
+            return make_response(json.dumps(JsonInfo))
+        else:
             if(os.path.exists(src)):
-            　　os.remove(src)
+                os.remove(src)
             JsonInfo = {}
             JsonInfo['statu'] = "fail"
-            return make_response(json.dumps(JsonInfo));
-        }
+            return make_response(json.dumps(JsonInfo))
 
 
 @app.route('/share', methods=['GET', 'POST'])
