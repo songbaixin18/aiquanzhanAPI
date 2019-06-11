@@ -1,41 +1,39 @@
-from flask import Flask,jsonify, request, session, redirect, send_from_directory, render_template
-from flask import request
+from flask import Flask, jsonify, request, session, redirect
+from flask import send_from_directory, render_template
 from flask_restful import reqparse, abort, Api, Resource
 from conf import db_connect
 from models import *
-import urllib
-import urllib2
 import sys
 import datetime
 import re
 import os
 import json
 import time
-from  sqlalchemy.sql.expression import func, select
+from sqlalchemy.sql.expression import func, select
 
 
 class DB:
 
-
-    def GetListCount(self,type):
+    def GetListCount(self, type):
         try:
             article_model = ArticleModel()
             if type == "0":
                 return article_model.query.count()
             else:
                 return article_model.query.filter_by(type=type).count()
-        except Exception, e:
-            print (e)
+        except Exception as e:
+            print(e)
             return {"status": "GetListCount error"}
 
-
-    def GetList (self,type,page,limit):
+    def GetList(self, type, page, limit):
         try:
             article_model = ArticleModel()
             if type == "0":
-                article_info = article_model.query.limit(limit).offset((int(page)-1)*limit).all()
+                article_info = article_model.query.limit(limit).offset(
+                    (int(page)-1)*limit).all()
             else:
-                article_info = article_model.query.filter_by(type=type).limit(limit).offset((int(page)-1)*limit).all()
+                article_info = article_model.query.filter_by(
+                    type=type).limit(limit).offset((int(page)-1)*limit).all()
             if article_info:
                 article_objs = []
                 for info in article_info:
@@ -53,23 +51,29 @@ class DB:
                 return article_objs
             else:
                 return [{"status": "GetList null"}]
-        except Exception, e:
+        except Exception as e:
             db.session.rollback()
-            print (e)
+            print(e)
             return [{"status": "GetList error"}]
 
-    def SaveArticle (self,title,description,author,src,type,thumbnail):
+    def SaveArticle(self, title, description, author, src, type, thumbnail):
         try:
-            session = DBSession()
-            new_user = ArticleModel(title=title, description=description,author=author,src=src,date=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),read_number=0,type=type,thumbnail=thumbnail)
-            session.add(new_user)
-            session.commit()
-            session.close()
+            new_article = ArticleModel(
+                title=title,
+                description=description,
+                author=author,
+                src=src,
+                date=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+                read_number=0,
+                type=type,
+                thumbnail=thumbnail)
+            db.session.add(new_article)
+            db.session.commit()
             article_model = ArticleModel()
             article_info = article_model.query.filter_by(src=src).first()
-            article_info['status'] = "SaveArticle success"
+            article_info.status = "SaveArticle success"
             return article_info
-        except Exception, e:
+        except Exception as e:
             db.session.rollback()
-            print (e)
+            print(e)
             return [{"status": "SaveArticle error"}]

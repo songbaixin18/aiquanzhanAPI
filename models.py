@@ -35,14 +35,25 @@ class ArticleModel(db.Model):
     description = db.Column(db.String(255))
     author = db.Column(db.String(255))
     src = db.Column(db.String(255))
-    date=db.Column(db.TIMESTAMP)
+    date = db.Column(db.TIMESTAMP)
     read_number = db.Column(db.Integer)
     type = db.Column(db.Integer)
     thumbnail = db.Column(db.String(255))
 
+
 class ArticleSchema(ma.Schema):
     class Meta:
-        fields = ('idarticle','title','description','author','src','date','read_number','type','thumbnail')
+        fields = (
+            'idarticle',
+            'title',
+            'description',
+            'author',
+            'src',
+            'date',
+            'read_number',
+            'type',
+            'thumbnail')
+
 
 article_schema = ArticleSchema(many=True)
 db.create_all()

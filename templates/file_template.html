@@ -1,11 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cn">
+
 <head>
     <meta charset="UTF-8">
-    <title>{{ title }} 鑫前端 黑科技</title>
+    <title>{{ info.title }} 鑫前端 黑科技</title>
 </head>
+
 <body>
-    <p>{{ content }}</p>
-    <p>{{ date }}</p>
+    <div class="container">
+        <article id="article">
+            <div id="article-header">
+                <h1 id="title">{{ info.title }}</h1>
+                <div id="meta">
+                    <span id="date">发布时间：{{ info.date }}</span>
+                    <span id="type">资源</span>
+                    <span id="source">作者：{{ info.author }}</span>
+                </div>
+            </div>
+            <main id="content">
+                {{content|safe}}
+                <hr>
+                {{ info.title }}
+                原创文章转载请注明出处，本文地址：<a href="{{ info.src }}"><span id="hostname"></span>{{ info.src }}</a>
+            </main>
+        </article>
+    </div>
+    <script src="/static/js/news.js"></script>
 </body>
+
 </html>

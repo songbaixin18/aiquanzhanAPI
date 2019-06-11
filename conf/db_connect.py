@@ -8,4 +8,4 @@ app_url_online = ''
 app_url_test = ''
 
 # local database (defualt)
-app_url = "mysql+mysqldb://root:5400018ss@127.0.0.1/qd?charset=utf8"
+app_url = "mysql+mysqlconnector://root:5400018ss@127.0.0.1/qd?charset=utf8"

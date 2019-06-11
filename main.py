@@ -1,12 +1,12 @@
 # coding=utf8
-from flask import Flask,jsonify, request, session, redirect, send_from_directory, render_template, make_response
+from flask import Flask, jsonify, request, session, redirect
+from flask import send_from_directory, render_template, make_response
 from flask_restful import reqparse, abort, Api, Resource
 from flask.logging import default_handler
 from conf import db_connect
 from DB import DB
 from models import *
 import urllib
-import urllib2
 import sys
 import time
 import re
@@ -15,7 +15,7 @@ import json
 import logging
 import uuid
 import random
-from  sqlalchemy.sql.expression import func, select
+from sqlalchemy.sql.expression import func, select
 
 defaultencoding = 'utf-8'
 
@@ -25,28 +25,28 @@ if sys.getdefaultencoding() != defaultencoding:
 
 
 def http_get(url):
-    response = urllib2.urlopen(url)
+    response = urllib.request.urlopen(url)
     return response.read()
 
 
-def http_post(url,values):
+def http_post(url, values):
     jdata = json.dumps(values)
-    req = urllib2.Request(url, jdata)
-    response = urllib2.urlopen(req)
+    req = urllib.request(url, jdata)
+    response = urllib.request.urlopen(req)
     return response.read()
 
 
-def http_post_json(url,values):
+def http_post_json(url, values):
     jdata = json.dumps(values)
     headers = {'Content-Type': 'application/json'}
-    req = urllib2.Request(url, headers = headers, data = jdata)
-    response = urllib2.urlopen(req)
+    req = urllib.request(url, headers=headers, data=jdata)
+    response = urllib.request.urlopen(req)
     return response.read()
 
- 
+
 def random_str(num):
     uln = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    rs = random.sample(uln,num)  # 生成一个指定位数的随机字符串
+    rs = random.sample(uln, num)  # 生成一个指定位数的随机字符串
     a = uuid.uuid1()  # 根据时间戳生成uuid,保证全球唯一
     b = ''.join(rs+str(a).split("-"))
     return b
@@ -62,17 +62,18 @@ parser.add_argument('type', location=['json', 'args'])
 parser.add_argument('thumbnail', location=['json', 'args'])
 parser.add_argument('content', location=['json', 'args'])
 
+
 class get_list(Resource):
 
-    def get_page_sum(self,type):
+    def get_page_sum(self, type):
         page_num = DB.GetListCount(str(type))
         if int(page_num) % 6 == 0:
             return int(page_num)/6
         else:
             return int(page_num)/6 + 1
 
-    def get(self,page,type):
-        list = DB.GetList(str(type),str(page),6)
+    def get(self, page, type):
+        list = DB.GetList(str(type), str(page), 6)
         page_sum = self.get_page_sum(str(type))
         JsonInfo = {}
         JsonInfo['article_list'] = list
@@ -81,25 +82,40 @@ class get_list(Resource):
         rst = make_response(json.dumps(JsonInfo))
         return rst
 
+
 class save_article(Resource):
 
     def post(self):
         args = parser.parse_args()
-        src = random_str(6)
-        saved = DB.SaveArticle(str(args['title']),str(args['description']),str(args['author']),src[1:],str(args['type']),str(args['thumbnail']))
-        if saved['status'] == "SaveArticle success":
-            if str(saved['type']) == "1" :
-                src = "./blog/" + src + ".html"
-                with open(src,'w') as f:
-                    f.write(str(render_template('blog_template.html',title = str(saved['title']),author = str(saved['author']),content = str(saved['content']),date = str(saved['date']))))
-            elif str(saved['type']) == "2" :
-                src = "./file/" + src + ".html"
-                with open(src,'w') as f:
-                    f.write(str(render_template('file_template.html',title = str(saved['title']),author = str(saved['author']),content = str(saved['content']),date = str(saved['date']))))
+        if args['type'] == "1":
+            src = "/blog/" + random_str(6) + ".html"
+        elif args['type'] == "2":
+            src = "/file/" + random_str(6) + ".html"
+        saved = DB.SaveArticle(
+            args['title'],
+            args['description'],
+            args['author'],
+            src,
+            args['type'],
+            args['thumbnail'])
+        src = "../www" + src
+        if saved.status == "SaveArticle success":
+            if str(saved.type) == "1":
+                with open(src, 'w', encoding='utf-8') as f:
+                    f.write(str(render_template(
+                        'blog_template.html',
+                        info=saved,
+                        content=str(args['content']))))
+            elif str(saved.type) == "2":
+                with open(src, 'w', encoding='utf-8') as f:
+                    f.write(str(render_template(
+                        'file_template.html',
+                        info=saved,
+                        content=str(args['content']))))
             JsonInfo = {}
-            JsonInfo['title'] = str(saved['title'])
-            JsonInfo['content'] = str(saved['content'])
-            JsonInfo['date'] = str(saved['date'])
+            JsonInfo['title'] = str(saved.title)
+            JsonInfo['content'] = str(args['content'])
+            JsonInfo['date'] = str(saved.date)
             JsonInfo['statu'] = "SaveArticle success"
             return make_response(json.dumps(JsonInfo))
         else:
@@ -107,7 +123,7 @@ class save_article(Resource):
                 os.remove(src)
             JsonInfo = {}
             JsonInfo['statu'] = "SaveArticle error"
-            return make_response(json.dumps(JsonInfo))   
+            return make_response(json.dumps(JsonInfo))
 
 
 @app.route('/share', methods=['GET', 'POST'])
@@ -127,13 +143,13 @@ if __name__ == '__main__':
     handler = logging.FileHandler('flask.log', encoding='UTF-8')
     handler.setLevel(logging.DEBUG)
     logging_format = logging.Formatter(
-        '%(asctime)s - %(levelname)s - %(filename)s - %(funcName)s - %(lineno)s - %(message)s')
+        '%(asctime)s - %(levelname)s - %(filename)s - \
+            %(funcName)s - %(lineno)s - %(message)s')
     handler.setFormatter(logging_format)
     for logger in (
             app.logger,
             logging.getLogger('sqlalchemy'),
-            logging.getLogger('other_package'),
-        ):
+            logging.getLogger('other_package')):
         logger.addHandler(default_handler)
     app.logger.addHandler(handler)
     app.run(host='127.0.0.1', port=6016)
