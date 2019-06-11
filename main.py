@@ -77,7 +77,7 @@ class get_list(Resource):
         page_sum = self.get_page_sum(str(type))
         JsonInfo = {}
         JsonInfo['article_list'] = list
-        JsonInfo['page_sum'] = page_sum
+        JsonInfo['page_sum'] = int(page_sum)
         JsonInfo['page_num'] = int(page)
         rst = make_response(json.dumps(JsonInfo))
         return rst
