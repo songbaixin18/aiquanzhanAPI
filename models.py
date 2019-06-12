@@ -40,6 +40,10 @@ class ArticleModel(db.Model):
     type = db.Column(db.Integer)
     thumbnail = db.Column(db.String(255))
 
+    __mapper_args__ = {
+        "order_by": date.desc()
+    }
+
 
 class ArticleSchema(ma.Schema):
     class Meta:

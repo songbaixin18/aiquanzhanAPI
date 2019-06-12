@@ -1,30 +1,69 @@
 <!DOCTYPE html>
 <html lang="cn">
 
-<head>
-    <meta charset="UTF-8">
-    <title>{{ info.title }} 鑫前端 黑科技</title>
-</head>
 
+<head><link rel="apple-touch-icon" href="/favicon.ico">
+    <link rel="icon" href="/favicon.ico">
+    <!--[if IE]><link rel="shortcut icon" href="/favicon.ico"><![endif]-->
+    <!-- or, set /favicon.ico for IE10 win -->
+    <meta name="msapplication-TileColor" content="#D83434">
+    <meta name="msapplication-TileImage" content="/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="/dist/css/app.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="referrer" content="no-referrer">
+    <meta charset="UTF-8">
+    <title>{{ info.title }} 爱全栈 黑科技</title>
+</head>
 <body>
-    <div class="container">
-        <article id="article">
-            <div id="article-header">
-                <h1 id="title">{{ info.title }}</h1>
-                <div id="meta">
-                    <span id="date">发布时间：{{ info.date }}</span>
-                    <span id="type">文章</span>
-                    <span id="source">作者：{{ info.author }}</span>
+    <div id="app">
+            <div class="header">
+                    <div class="container">
+                        <div class="dateshow">
+                            <p>
+                                服务器时间：
+                                2019年06月12日 10点23分51秒
+                            </p>
+                        </div>
+                        <a href="/"><img src="/dist/imgs/logotext.png" class="logo"></a>
+                        <div class="nav-box">
+                            <p class="nav-list"><a href="#/" class="nav-item router-link-active">
+                                    首页
+                                </a><a href="#/file" class="nav-item">
+                                    资源
+                                </a><a href="#/blog" class="nav-item router-link-exact-active router-link-active">
+                                    文档
+                                </a><a href="#/about" class="nav-item">
+                                    关于
+                                </a><a href="#/t" class="nav-item">
+                                    友情链接
+                                </a> <span id="nav-move-line"
+                                    style="margin-left: 200px; transition: -webkit-transform 300ms ease-out 0s; transform: translate(0px, 0px) scale(1) translateZ(0px);"></span>
+                            </p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <main id="content">
-                {{content|safe}}
-                <hr>
-                {{ info.title }}
-                原创文章转载请注明出处，本文地址：<a href="{{ info.src }}"><span id="hostname"></span>{{ info.src }}</a>
-            </main>
-        </article>
+                <div class="container">
+                    <article id="article">
+                        <div id="article-header">
+                            <h1 id="title">{{ info.title }}</h1>
+                            <div id="meta">
+                                <span id="date">发布时间：{{ info.date }}</span>
+                                <span id="type">文章</span>
+                                <span id="source">作者：{{ info.author }}</span>
+                            </div>
+                        </div>
+                        <main id="content">
+                            {{content|safe}}
+                            <hr>
+                            {{ info.title }}
+                            原创文章转载请注明出处，本文地址：<a href="{{ info.src }}"><span id="hostname"></span>{{ info.src }}</a>
+                        </main>
+                    </article>
+                </div>
     </div>
+
     <script src="/static/js/news.js"></script>
 </body>
 
