@@ -53,14 +53,6 @@ def random_str(num):
 
 
 DB = DB()
-parser = reqparse.RequestParser()
-parser.add_argument('title', location=['json', 'args'])
-parser.add_argument('description', location=['json', 'args'])
-parser.add_argument('author', location=['json', 'args'])
-parser.add_argument('date', location=['json', 'args'])
-parser.add_argument('type', location=['json', 'args'])
-parser.add_argument('thumbnail', location=['json', 'args'])
-parser.add_argument('content', location=['json', 'args'])
 
 
 class get_list(Resource):
@@ -86,21 +78,24 @@ class get_list(Resource):
 class save_article(Resource):
 
     def post(self):
+        title = request.form.get("title")
+        description = request.form.get("description")
+        author = request.form.get("author")
         src = ""
-        args = parser.parse_args()
-        if args['type'] == "1":
-            src = "/blog/" + random_str(6) + ".html"
-        elif args['type'] == "2":
-            src = "/file/" + random_str(6) + ".html"
-        saved = DB.SaveArticle(
-            args['title'],
-            args['description'],
-            args['author'],
-            src,
-            args['type'],
-            args['thumbnail'])
+        type = request.form.get("type")
+        upLoadThumbnail = request.files.get("upLoadThumbnail")
+        random = random_str(6)
+        if type == "1":
+            src = "/blog/" + random + ".html"
+            thumbnail = "/blog/" + random + "/" + upLoadThumbnail.filename
+        elif type == "2":
+            src = "/file/" + random + ".html"
+            thumbnail = "/blog/" + random + "/" + upLoadThumbnail.filename
+        saved = DB.SaveArticle(title, description, author, src, type, thumbnail)
         src = "../www" + src
+        thumbnail = "../www" + thumbnail
         if saved.status == "SaveArticle success":
+            upLoadThumbnail.save(thumbnail)
             if str(saved.type) == "1":
                 with open(src, 'w', encoding='utf-8') as f:
                     f.write(str(render_template(
