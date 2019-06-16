@@ -86,6 +86,7 @@ class get_list(Resource):
 class save_article(Resource):
 
     def post(self):
+        src = ""
         args = parser.parse_args()
         if args['type'] == "1":
             src = "/blog/" + random_str(6) + ".html"
