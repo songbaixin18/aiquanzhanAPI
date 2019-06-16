@@ -22,7 +22,7 @@
 <body>
     <div id="app">
         <div id="header" class="header"></div>
-        <div class="container">
+        <div class="container clearfix">
             <div class="content-wrap">
                 <article id="article">
                     <div id="article-header">
@@ -43,19 +43,17 @@
                     <main id="content">
                         {{content|safe}}
                         <hr>
-                        {{ info.title }}
-                        原创文章转载请注明出处，本文地址：<a href="{{ info.src }}"><span id="hostname"></span>{{ info.src }}</a>
+                        <p>《{{ info.title }}》原文：<a href="{{ info.src }}"><span id="hostname"></span>{{ info.src }}</a></p>
+                        <p>原创文章，未经允许禁止转载</p>
                     </main>
                 </article>
+            </div>
+            <div id="right" class="content-right">
             </div>
         </div>
         <div id="footer" class="footer"></div>
     </div>
-    <script>
-        $("#header").load("/local_header.html");
-        $("#footer").load("/local_footer.html");
-    </script>
-    <!-- <script src="/static/js/news.js"></script> -->
+    <script src="/local_js/article.js"></script>
 </body>
 
 </html>
