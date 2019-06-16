@@ -84,6 +84,7 @@ class save_article(Resource):
         src = ""
         type = request.form.get("type")
         upLoadThumbnail = request.files.get("thumbnail")
+        content = request.form.get("content")
         random = random_str(6)
         if not os.path.exists("../www/blog/" + random + "/"):
             os.makedirs("../www/blog/" + random + "/") 
@@ -103,16 +104,15 @@ class save_article(Resource):
                     f.write(str(render_template(
                         'blog_template.html',
                         info=saved,
-                        content=str(args['content']))))
+                        content=str(content))))
             elif str(saved.type) == "2":
                 with open(src, 'w', encoding='utf-8') as f:
                     f.write(str(render_template(
                         'file_template.html',
                         info=saved,
-                        content=str(args['content']))))
+                        content=str(content))))
             JsonInfo = {}
             JsonInfo['title'] = str(saved.title)
-            JsonInfo['content'] = str(args['content'])
             JsonInfo['date'] = str(saved.date)
             JsonInfo['statu'] = "SaveArticle success"
             return make_response(json.dumps(JsonInfo))
