@@ -83,8 +83,10 @@ class save_article(Resource):
         author = request.form.get("author")
         src = ""
         type = request.form.get("type")
-        upLoadThumbnail = request.files.get("upLoadThumbnail")
+        upLoadThumbnail = request.files.get("thumbnail")
         random = random_str(6)
+        if not os.path.exists("../www/blog/" + random + "/"):
+            os.makedirs("../www/blog/" + random + "/") 
         if type == "1":
             src = "/blog/" + random + ".html"
             thumbnail = "/blog/" + random + "/" + upLoadThumbnail.filename
