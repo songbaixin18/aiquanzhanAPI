@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="cn">
+
 <head>
     <link rel="apple-touch-icon" href="/favicon.ico">
     <link rel="icon" href="/favicon.ico">
@@ -42,9 +43,11 @@
                     </div>
                     <main id="content">
                         {{content|safe}}
-                        <hr>
-                        <p>《{{ info.title }}》原文：<a href="{{ info.src }}"><span id="hostname"></span>{{ info.src }}</a></p>
-                        <p>原创文章，未经允许禁止转载</p>
+                        <div class="content-footer">
+                            <p>《{{ info.title }}》</p>
+                            <p>原文：<a href="{{ info.src }}"><span id="hostname"></span>{{ info.src }}</a></p>
+                            <p>原创文章，未经授权禁止转载</p>
+                        </div>
                     </main>
                 </article>
             </div>
