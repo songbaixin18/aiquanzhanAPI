@@ -45,19 +45,35 @@
                         {{content|safe}}
                         <div class="content-footer">
                             <p>《{{ info.title }}》</p>
-                            <p>原文：<a href="https://www.songbaixin.com{{ info.src }}">https://www.songbaixin.com{{ info.src }}</a></p>
+                            <p>原文：<a
+                                    href="https://www.songbaixin.com{{ info.src }}">https://www.songbaixin.com{{ info.src }}</a>
+                            </p>
                             <p>原创文章，未经授权禁止转载</p>
                         </div>
                     </main>
                 </article>
             </div>
-            <div id="right-icon" class="content-right-icon"><img class="menu-icon" src="/dist/imgs/menu.png"/></div>
+            <div id="right-icon" class="content-right-icon"><img class="menu-icon" src="/dist/imgs/menu.png" /></div>
             <div id="right" class="content-right">
             </div>
         </div>
         <div id="footer" class="footer"></div>
     </div>
     <script src="/local_js/article.js"></script>
+    <script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
 </body>
 
 </html>
