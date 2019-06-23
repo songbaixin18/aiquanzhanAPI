@@ -87,14 +87,15 @@ class save_article(Resource):
         content = request.form.get("content")
         random = random_str(6)
         if not os.path.exists("../www/blog/" + random + "/"):
-            os.makedirs("../www/blog/" + random + "/") 
+            os.makedirs("../www/blog/" + random + "/")
         if type == "1":
             src = "/blog/" + random + ".html"
             thumbnail = "/blog/" + random + "/" + upLoadThumbnail.filename
         elif type == "2":
             src = "/file/" + random + ".html"
             thumbnail = "/blog/" + random + "/" + upLoadThumbnail.filename
-        saved = DB.SaveArticle(title, description, author, src, type, thumbnail)
+        saved = DB.SaveArticle(
+            title, description, author, src, type, thumbnail)
         src = "../www" + src
         thumbnail = "../www" + thumbnail
         if saved.status == "SaveArticle success":
@@ -124,6 +125,22 @@ class save_article(Resource):
             return make_response(json.dumps(JsonInfo))
 
 
+class get_read_number(Resource):
+
+    def get(self, idarticle):
+        info = DB.UpdateReadNumber(int(idarticle))
+        if(info.status):
+            JsonInfo = {}
+            JsonInfo['read_number'] = info.read_number
+            JsonInfo['status'] = "true"
+        else:
+            JsonInfo = {}
+            JsonInfo['status'] = "false"
+            JsonInfo['errorMsg'] = info.errorMsg
+        rst = make_response(json.dumps(JsonInfo))
+        return rst
+
+
 @app.route('/share', methods=['GET', 'POST'])
 def element():
     return render_template('share.html')
@@ -133,6 +150,7 @@ api = Api(app)
 # apis
 api.add_resource(get_list, '/page/<type>/<page>')
 api.add_resource(save_article, '/save_article')
+api.add_resource(get_read_number, '/read_number/<idarticle>')
 if __name__ == '__main__':
     app.debug = True
     app.config['SQLALCHEMY_BINDS'] = {'app': app_url}

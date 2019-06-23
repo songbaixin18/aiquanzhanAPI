@@ -77,3 +77,22 @@ class DB:
             db.session.rollback()
             print(e)
             return [{"status": "SaveArticle error"}]
+
+    def UpdateReadNumber(self, idarticle):
+        try:
+            article = db.session.query.filter_by(idarticle=idarticle).first()
+            if(article == None):
+                print("UpdateReadNumber error: nofind article!")
+                return [{"status": False},{"errorMsg": "UpdateReadNumber error: nofind article!"}]
+            article.read_number = article.read_number + 1
+            read_number = article.read_number
+            db.session.add(article)
+            db.session.commit()
+            article_info = []
+            article_info.read_number = read_number
+            article_info.status = True
+            return article_info
+        except Exception as e:
+            db.session.rollback()
+            print("UpdateReadNumber error" + e)
+            return [{"status": False},{"errorMsg": "UpdateReadNumber error: " + e}]
