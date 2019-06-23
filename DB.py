@@ -94,5 +94,5 @@ class DB:
             return article_info
         except Exception as e:
             db.session.rollback()
-            print("UpdateReadNumber error" + e)
-            return [{"status": False},{"errorMsg": "UpdateReadNumber error: " + e}]
+            print("UpdateReadNumber error" + str(e))
+            return [{"status": False},{"errorMsg": "UpdateReadNumber error: " + str(e)}]
