@@ -80,7 +80,8 @@ class DB:
 
     def UpdateReadNumber(self, idarticle):
         try:
-            article = db.session.query.filter_by(idarticle=idarticle).first()
+            article_model = ArticleModel()
+            article = article_model.query.filter_by(idarticle=idarticle).first()
             if(article == None):
                 print("UpdateReadNumber error: nofind article!")
                 return [{"status": False},{"errorMsg": "UpdateReadNumber error: nofind article!"}]
