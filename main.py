@@ -129,14 +129,14 @@ class get_read_number(Resource):
 
     def get(self, idarticle):
         info = DB.UpdateReadNumber(int(idarticle))
-        if(info.status):
+        if(info["status"]):
             JsonInfo = {}
-            JsonInfo['read_number'] = info.read_number
+            JsonInfo['read_number'] = info["read_number"]
             JsonInfo['status'] = "true"
         else:
             JsonInfo = {}
             JsonInfo['status'] = "false"
-            JsonInfo['errorMsg'] = info.errorMsg
+            JsonInfo['errorMsg'] = info["errorMsg"]
         rst = make_response(json.dumps(JsonInfo))
         return rst
 

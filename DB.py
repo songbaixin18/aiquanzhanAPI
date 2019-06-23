@@ -90,8 +90,8 @@ class DB:
             db.session.add(article)
             db.session.commit()
             article_info = {}
-            article_info.read_number = read_number
-            article_info.status = True
+            article_info["read_number"] = read_number
+            article_info["status"] = True
             return article_info
         except Exception as e:
             db.session.rollback()
