@@ -43,7 +43,7 @@ class DB:
                     article_obj['description'] = info.description
                     article_obj['author'] = info.author
                     article_obj['src'] = info.src
-                    article_obj['date'] = str(info.date)
+                    article_obj['date'] = str(info.date)[0:10]
                     article_obj['read_number'] = info.read_number
                     article_obj['type'] = info.type
                     article_obj['thumbnail'] = info.thumbnail
