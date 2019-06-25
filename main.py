@@ -131,9 +131,7 @@ class get_read_number(Resource):
         src = "/blog/" + src + ".html"
         print(src)
         info = DB.UpdateReadNumber(src)
-        print(info)
-        print(info[0])
-        print(info[0].status)
+        print(info.status)
         if(info["status"]):
             JsonInfo = {}
             JsonInfo['read_number'] = info["read_number"]
