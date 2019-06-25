@@ -128,7 +128,7 @@ class save_article(Resource):
 class get_read_number(Resource):
 
     def get(self, idarticle):
-        info = DB.UpdateReadNumber(int(idarticle))
+        info = DB.UpdateReadNumber(idarticle)
         if(info["status"]):
             JsonInfo = {}
             JsonInfo['read_number'] = info["read_number"]

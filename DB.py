@@ -13,7 +13,6 @@ from sqlalchemy.sql.expression import func, select
 
 
 class DB:
-
     def GetListCount(self, type):
         try:
             article_model = ArticleModel()
@@ -30,10 +29,11 @@ class DB:
             article_model = ArticleModel()
             if type == "0":
                 article_info = article_model.query.limit(limit).offset(
-                    (int(page)-1)*limit).all()
+                    (int(page) - 1) * limit).all()
             else:
                 article_info = article_model.query.filter_by(
-                    type=type).limit(limit).offset((int(page)-1)*limit).all()
+                    type=type).limit(limit).offset(
+                        (int(page) - 1) * limit).all()
             if article_info:
                 article_objs = []
                 for info in article_info:
@@ -58,15 +58,16 @@ class DB:
 
     def SaveArticle(self, title, description, author, src, type, thumbnail):
         try:
-            new_article = ArticleModel(
-                title=title,
-                description=description,
-                author=author,
-                src=src,
-                date=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
-                read_number=0,
-                type=type,
-                thumbnail=thumbnail)
+            new_article = ArticleModel(title=title,
+                                       description=description,
+                                       author=author,
+                                       src=src,
+                                       date=time.strftime(
+                                           "%Y-%m-%d %H:%M:%S",
+                                           time.localtime()),
+                                       read_number=0,
+                                       type=type,
+                                       thumbnail=thumbnail)
             db.session.add(new_article)
             db.session.commit()
             article_model = ArticleModel()
@@ -81,10 +82,14 @@ class DB:
     def UpdateReadNumber(self, idarticle):
         try:
             article_model = ArticleModel()
-            article = article_model.query.filter_by(idarticle=idarticle).first()
-            if(article == None):
+            article = article_model.query.filter_by(
+                idarticle=idarticle).first()
+            if article is None:
                 print("UpdateReadNumber error: nofind article!")
-                return [{"status": False, "errorMsg": "UpdateReadNumber error: nofind article!"}]
+                return [{
+                    "status": False,
+                    "errorMsg": "UpdateReadNumber error: nofind article!"
+                }]
             article.read_number = article.read_number + 1
             read_number = article.read_number
             db.session.add(article)
@@ -96,4 +101,7 @@ class DB:
         except Exception as e:
             db.session.rollback()
             print("UpdateReadNumber error: " + str(e))
-            return [{"status": False, "errorMsg": "UpdateReadNumber error: " + str(e)}]
+            return [{
+                "status": False,
+                "errorMsg": "UpdateReadNumber error: " + str(e)
+            }]
