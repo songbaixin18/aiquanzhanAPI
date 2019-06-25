@@ -127,8 +127,13 @@ class save_article(Resource):
 
 class get_read_number(Resource):
 
-    def get(self, idarticle):
-        info = DB.UpdateReadNumber(idarticle)
+    def get(self, src):
+        src = "/blog/" + src + ".html"
+        print(src)
+        info = DB.UpdateReadNumber(src)
+        print(info)
+        print(info[0])
+        print(info[0].status)
         if(info["status"]):
             JsonInfo = {}
             JsonInfo['read_number'] = info["read_number"]
@@ -150,7 +155,7 @@ api = Api(app)
 # apis
 api.add_resource(get_list, '/page/<type>/<page>')
 api.add_resource(save_article, '/save_article')
-api.add_resource(get_read_number, '/read_number/<idarticle>')
+api.add_resource(get_read_number, '/read_number/<src>')
 if __name__ == '__main__':
     app.debug = True
     app.config['SQLALCHEMY_BINDS'] = {'app': app_url}

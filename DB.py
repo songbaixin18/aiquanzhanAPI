@@ -79,11 +79,11 @@ class DB:
             print(e)
             return [{"status": "SaveArticle error"}]
 
-    def UpdateReadNumber(self, idarticle):
+    def UpdateReadNumber(self, src):
         try:
             article_model = ArticleModel()
             article = article_model.query.filter_by(
-                idarticle=idarticle).first()
+                src=src).first()
             if article is None:
                 print("UpdateReadNumber error: nofind article!")
                 return [{
